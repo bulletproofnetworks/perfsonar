@@ -13,12 +13,12 @@ class perfsonar::install (
       location     =>  "http://downloads.perfsonar.net/debian/ perfsonar-release",
       notify       =>  Exec['apt_update'],
     }
-    -> package { $perfsonar::params::install_packages:
+    -> package { $::perfsonar::params::install_packages:
       ensure => $ensure,
     }
   }
   else {
-    package { $perfsonar::params::install_packages:
+    package { $::perfsonar::params::install_packages:
       ensure => $ensure,
     }
   }
