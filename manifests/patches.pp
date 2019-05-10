@@ -11,7 +11,7 @@ class perfsonar::patches(
   } else {
     $patchpackage_require = undef
   }
-  case $perfsonar_version {
+  case '0.0' {
     /^3\.5\.1/: {
       $patches = {
         '01_perfsonar_webservice_auth.patch.3.5.0' => {

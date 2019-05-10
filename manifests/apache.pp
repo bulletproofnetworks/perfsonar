@@ -29,14 +29,7 @@ class perfsonar::apache(
     notify  => Service[$::perfsonar::params::httpd_service],
     require => Package[$::perfsonar::params::httpd_package],
   }
-  # remove the http only redirect from perfsonar apache configuration (introduced in 3.5)
-  # the global rule in tk_redirect covers both, http and https
-  # all version dependent options require puppet to be installed (the fact queries which version is installed)
-  # they are not applied during the initial run which installs perfsonar, a second run is needed to apply those changes
-  $remove_redirect = versioncmp($perfsonar_version, '3.5') ? {
-    /^[01]$/ => "rm VirtualHost/directive[.='RedirectMatch' and arg='^/$']",
-    default  => [],
-  }
+  $remove_redirect = []
 
   # the augeas lens uses an array for the ssl protocol values
   # which means we need a separate set commmand for each value
@@ -83,7 +76,7 @@ class perfsonar::apache(
   }
   if $have_auth > 0 {
     # additions for new web gui
-    $changes35 = versioncmp($perfsonar_version, '3.5') ? {
+    $changes35 = versioncmp('0.0', '3.5') ? {
       /^[01]$/ => [
         "rm Location[arg='\"/toolkit/auth\"']/directive[.='AuthShadow']",
         "rm Location[arg='\"/toolkit/auth\"']/directive[.='AuthType']",
@@ -108,7 +101,7 @@ class perfsonar::apache(
     # this is problematic as it only restores the configuration file to the state that was known
     # to the author at the time of writing
     # it's safer to reinstall the configuration file from the rpm
-    $changes35 = versioncmp($perfsonar_version, '3.5') ? {
+    $changes35 = versioncmp('0.0', '3.5') ? {
       /^[01]$/ => [
         "rm Location[arg='\"/toolkit/auth\"']/*[.='Include']",
         "setm Location[arg='\"/toolkit/auth\"'] directive[.='AuthShadow'] 'AuthShadow'",

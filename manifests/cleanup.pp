@@ -1,6 +1,6 @@
 class perfsonar::cleanup(
 ) {
-  if versioncmp($perfsonar_version, '3.5') >= 0 {
+  if versioncmp('0.0', '3.5') >= 0 {
     # php is not being used by perfsonar >= 3.5
     # why keep iperf3 devel packages if not needed
     package { [ 'php-xml', 'php-gd', 'iperf3-devel']:
