@@ -34,7 +34,7 @@ class perfsonar::params(
   $ls_registration_daemon_snotify        = true,
   $ls_registration_daemon_lr_order       = '03',
   $ls_registration_daemon_lr_options     = [ 'weekly', 'compress', 'rotate 50', 'missingok', 'notifempty',
-    'postrotate', '  /sbin/service ls_registration_daemon restart > /dev/null 2>/dev/null || true', 'endscript' ],
+    'postrotate', '  /bin/systemctl ls_registration_daemon restart > /dev/null 2>/dev/null || true', 'endscript' ],
   $ls_cache_daemon_install_ensure        = 'present',
   $ls_cache_daemon_ensure                = 'running',
   $ls_cache_daemon_enable                = true,
@@ -44,7 +44,7 @@ class perfsonar::params(
   $ls_cache_daemon_snotify               = true,
   $ls_cache_daemon_lr_order              = '04',
   $ls_cache_daemon_lr_options            = [ 'weekly', 'compress', 'rotate 50', 'missingok', 'notifempty',
-    'postrotate', '  /sbin/service ls_cache_daemon restart > /dev/null 2>/dev/null || true', 'endscript' ],
+    'postrotate', '  /bin/systemctl ls_cache_daemon restart > /dev/null 2>/dev/null || true', 'endscript' ],
   $patchdir                              = '/usr/local/share/perfsonar_patches',
   $patchpackage                          = 'patch',
   $patchpackage_ensure                   = 'present',
@@ -54,7 +54,7 @@ class perfsonar::params(
   # os specifics
   case $::osfamily {
     'RedHat': {
-      $modssl_package   = 'mod_ssl'
+      $apache_dev_package   = 'mod_ssl'
       $httpd_package    = 'httpd'
       $httpd_service    = 'httpd'
       $httpd_hasrestart = true
@@ -62,6 +62,16 @@ class perfsonar::params(
       $httpd_dir        = '/etc/httpd'
       $mod_dir          = "${httpd_dir}/conf.d"
       $conf_dir         = "${httpd_dir}/conf.d"
+    }
+    'Debian': {
+      $apache_dev_package   = 'apache2-ssl-dev'
+      $httpd_package    = 'apache2'
+      $httpd_service    = 'apache2'
+      $httpd_hasrestart = true
+      $httpd_hasstatus  = true
+      $httpd_dir        = '/etc/apache2'
+      $mod_dir          = "${httpd_dir}/mods-enabled"
+      $conf_dir         = "${httpd_dir}/conf-enabled"       
     }
     default: {
       fail("osfamily ${::osfamily} is not supported")
