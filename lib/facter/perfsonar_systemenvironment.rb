@@ -5,3 +5,10 @@ Facter.add(:perfsonar_systemenvironment) do
     ps_se && !ps_se.empty? ? true : false
   end
 end
+Facter.add(:perfsonar_systemenvironment) do
+  confine :osfamily => 'Debian'
+  setcode do
+    ps_se = Facter::Util::Resolution::exec('/usr/bin/dpkg -s perfsonar-toolkit-systemenv|grep Version|cut -d \':\' -f2|awk \'{print $1}\'')
+    ps_se && !ps_se.empty? ? true : false
+  end
+end
