@@ -10,6 +10,10 @@ Facter.add(:perfsonar_version) do
   confine :osfamily => 'Debian'
   setcode do
     perfsonar = Facter::Util::Resolution::exec('/usr/bin/dpkg -s perfsonar-toolkit|grep Version|cut -d \':\' -f2|awk \'{print $1}\'')
-    perfsonar.split(/ /)[1] if perfsonar
-  end
+   if perfsonar
+      perfsonar.split(/ /)[1]
+   else
+      '0.0'
+   end
+   end
 end
