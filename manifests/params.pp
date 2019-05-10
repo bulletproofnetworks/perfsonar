@@ -1,4 +1,5 @@
 class perfsonar::params(
+  $install_ensure                        = 'present',
   $regular_testing_install_ensure        = 'present',
   $regular_testing_ensure                = 'stopped',
   $regular_testing_enable                = false,
