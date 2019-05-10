@@ -1,6 +1,8 @@
 class perfsonar::install (
   $ensure = $::perfsonar::params::install_ensure,
 ) inherits perfsonar::params {
+  notify{"1: ${::perfsonar::params::install_ensure}": }
+  notify{"2: ${::perfsonar::params::install_packages}": }
   if $::osfamily == 'Debian' {
     apt::key { 'perfsonar-key':
       ensure =>  'present',
@@ -12,9 +14,6 @@ class perfsonar::install (
       repos        =>  'main',
       location     =>  "http://downloads.perfsonar.net/debian/ perfsonar-release",
       notify       =>  Exec['apt_update'],
-    }
-    -> package { $::perfsonar::params::install_packages:
-      ensure => $ensure,
     }
   }
   else {
