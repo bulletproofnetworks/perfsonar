@@ -1,5 +1,5 @@
 class perfsonar::install (
-  $ensure = $::perfsonar::install_ensure,
+  $ensure = $::perfsonar::params::install_ensure,
 ) inherits perfsonar::params {
   if $::osfamily == 'Debian' {
     apt::key { 'perfsonar-key':
